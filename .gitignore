@@ -31,3 +31,5 @@ DerivedData/
 # Temporary files
 *.swp
 *.swo
+TODO_*.md
+
