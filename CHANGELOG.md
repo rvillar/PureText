@@ -10,9 +10,12 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 ### Added
 - GitHub Actions release workflow for publishing prebuilt macOS ZIP archives.
 - Local release packaging script for generating a distributable archive from `PureText.app`.
+- Support for opening and saving `.md`, `.yml`, `.bru`, and `.pom` files.
 
 ### Changed
 - The release workflow now publishes a GitHub Release for both tag-based and manually triggered runs.
+- POM formatting now follows the same tag-based indentation flow used for HTML.
+- YML and BRU are now treated as plain-text files without formatting.
 
 ### Fixed
 

@@ -4,7 +4,11 @@ import UniformTypeIdentifiers
 /// Enumerates the file extensions that PureText can open, save, and optionally format.
 enum NoteFileType: String, CaseIterable {
     case txt
+    case md
     case csv
+    case yml
+    case bru
+    case pom
     case json
     case ljson
     case xml
@@ -28,9 +32,9 @@ enum NoteFileType: String, CaseIterable {
     /// Indicates whether the editor offers a formatting command for the file type.
     var isFormattingSupported: Bool {
         switch self {
-        case .json, .ljson, .xml, .html:
+        case .json, .ljson, .xml, .html, .pom:
             return true
-        case .txt, .csv:
+        case .txt, .md, .csv, .yml, .bru:
             return false
         }
     }
@@ -40,8 +44,16 @@ enum NoteFileType: String, CaseIterable {
         switch self {
         case .txt:
             return .plainText
+        case .md:
+            return UTType(filenameExtension: "md", conformingTo: .plainText)
         case .csv:
             return UTType(filenameExtension: "csv") ?? .commaSeparatedText
+        case .yml:
+            return UTType("com.fnt.puretext.yml")
+        case .bru:
+            return UTType("com.fnt.puretext.bru")
+        case .pom:
+            return UTType("com.fnt.puretext.pom")
         case .json:
             return .json
         case .ljson:

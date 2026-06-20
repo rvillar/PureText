@@ -33,9 +33,9 @@ enum DocumentFormatter {
             return try prettyPrintedLineJSON(text)
         case .xml:
             return try prettyPrintedXML(text)
-        case .html:
+        case .html, .pom:
             return try prettyPrintedHTML(text)
-        case .txt, .csv:
+        case .txt, .md, .csv, .yml, .bru:
             throw DocumentFormatterError.formattingUnavailable(fileType)
         }
     }

@@ -1,6 +1,6 @@
 # PureText
 
-PureText is a minimal open source macOS text editor for plain and structured text files. It provides a native AppKit interface with tabbed editing, drag-and-drop opening from Finder or the Dock, and lightweight formatting helpers for JSON, LJSON, XML, and HTML.
+PureText is a minimal open source macOS text editor for plain and structured text files. It provides a native AppKit interface with tabbed editing, drag-and-drop opening from Finder or the Dock, and lightweight formatting helpers for JSON, LJSON, XML, HTML, and POM.
 
 ## Download
 
@@ -27,12 +27,12 @@ The project aims to offer a small, focused editor for unformatted text on macOS 
 
 ## Features
 
-- Open and edit `.txt`, `.csv`, `.json`, `.ljson`, `.xml`, and `.html` files
+- Open and edit `.txt`, `.md`, `.csv`, `.yml`, `.bru`, `.pom`, `.json`, `.ljson`, `.xml`, and `.html` files
 - Open files by launching the app, using the File menu, or dragging supported files onto the Dock icon
 - One file per tab, with close controls directly in the tab strip
 - Automatic untitled tabs named `Untitle1`, `Untitle2`, and so on
 - Plain-text editing with undo support
-- File-type-aware formatting for JSON, LJSON, XML, and HTML
+- File-type-aware formatting for JSON, LJSON, XML, HTML, and POM
 - Light and dark appearance support based on the current macOS setting
 - Basic document state handling for unsaved changes
 
@@ -136,7 +136,11 @@ The project currently depends only on:
 | Extension | Open | Save | Format |
 | --- | --- | --- | --- |
 | `.txt` | Yes | Yes | No |
+| `.md` | Yes | Yes | No |
 | `.csv` | Yes | Yes | No |
+| `.yml` | Yes | Yes | No |
+| `.bru` | Yes | Yes | No |
+| `.pom` | Yes | Yes | Yes |
 | `.json` | Yes | Yes | Yes |
 | `.ljson` | Yes | Yes | Yes |
 | `.xml` | Yes | Yes | Yes |

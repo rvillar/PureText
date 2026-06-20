@@ -54,6 +54,60 @@
 				</array>
 			</dict>
 		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.text</string>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>YML File</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.fnt.puretext.yml</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>yml</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.text</string>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>BRU File</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.fnt.puretext.bru</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>bru</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.text</string>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>POM File</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.fnt.puretext.pom</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>pom</string>
+				</array>
+			</dict>
+		</dict>
 	</array>
 	<key>CFBundleDocumentTypes</key>
 	<array>
@@ -68,6 +122,9 @@
 			<array>
 				<string>public.plain-text</string>
 				<string>public.comma-separated-values-text</string>
+				<string>net.daringfireball.markdown</string>
+				<string>com.fnt.puretext.yml</string>
+				<string>com.fnt.puretext.bru</string>
 			</array>
 		</dict>
 		<dict>
@@ -79,6 +136,7 @@
 			<string>Owner</string>
 			<key>LSItemContentTypes</key>
 			<array>
+				<string>com.fnt.puretext.pom</string>
 				<string>public.json</string>
 				<string>public.xml</string>
 				<string>public.html</string>
