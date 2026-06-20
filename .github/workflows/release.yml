@@ -1,0 +1,76 @@
+name: Release App
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      version_label:
+        description: "Optional version label for the ZIP asset"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  build-release:
+    runs-on: macos-14
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Resolve release version
+        id: version
+        shell: bash
+        env:
+          INPUT_VERSION_LABEL: ${{ inputs.version_label }}
+        run: |
+          if [[ -n "$INPUT_VERSION_LABEL" ]]; then
+            version_label="${INPUT_VERSION_LABEL#v}"
+          elif [[ "${GITHUB_REF_TYPE:-}" == "tag" ]]; then
+            version_label="${GITHUB_REF_NAME#v}"
+          else
+            version_label="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' App/Info.plist)"
+          fi
+
+          echo "value=$version_label" >> "$GITHUB_OUTPUT"
+
+      - name: Resolve release tag
+        id: release_tag
+        shell: bash
+        run: |
+          if [[ "${GITHUB_REF_TYPE:-}" == "tag" ]]; then
+            release_tag="${GITHUB_REF_NAME}"
+          else
+            release_tag="v${{ steps.version.outputs.value }}"
+          fi
+
+          echo "value=$release_tag" >> "$GITHUB_OUTPUT"
+
+      - name: Build app bundle
+        shell: bash
+        run: ./scripts/build_app.sh
+
+      - name: Package release archive
+        shell: bash
+        run: ./scripts/package_release.sh "${{ steps.version.outputs.value }}"
+
+      - name: Upload release artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: PureText-${{ steps.version.outputs.value }}-macOS
+          path: |
+            .artifacts/release/*.zip
+            .artifacts/PureText.app
+
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.release_tag.outputs.value }}
+          name: PureText ${{ steps.version.outputs.value }}
+          target_commitish: ${{ github.sha }}
+          files: .artifacts/release/*.zip
+          generate_release_notes: true

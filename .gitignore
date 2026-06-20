@@ -1,0 +1,33 @@
+.DS_Store
+
+# Swift Package Manager
+.build/
+.swiftpm/
+Package.resolved
+
+# Local build outputs
+.artifacts/
+.cache/
+DerivedData/
+
+# Xcode user data
+*.xcuserdata/
+*.xccheckout
+*.xcscmblueprint
+*.moved-aside
+*.xcuserstate
+.index-build/
+*.dSYM/
+
+# Workspace noise
+*.xcodeproj/project.xcworkspace/
+*.xcworkspace/xcuserdata/
+
+# Editor settings
+.idea/
+.vscode/
+.sourcekit-lsp/
+
+# Temporary files
+*.swp
+*.swo
