@@ -2,6 +2,12 @@
 
 PureText is a minimal open source macOS text editor for plain and structured text files. It provides a native AppKit interface with tabbed editing, drag-and-drop opening from Finder or the Dock, and lightweight formatting helpers for JSON, LJSON, XML, HTML, and POM.
 
+## Screenshot
+
+<p align="center">
+  <img src="docs/images/puretext-screenshot.png" alt="PureText screenshot" width="1100">
+</p>
+
 ## Download
 
 If you want to use PureText without building it locally, download the latest prebuilt ZIP from the repository's **GitHub Releases** page and extract `PureText.app`.
