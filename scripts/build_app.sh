@@ -10,6 +10,7 @@ ASSET_CATALOG="$BUILD_ROOT/Assets.xcassets"
 APPICON_SET="$ASSET_CATALOG/AppIcon.appiconset"
 ICON_SOURCE="$ROOT_DIR/Assets/PureTextIcon.png"
 BIN_PATH="$BUILD_ROOT/$APP_NAME"
+CODESIGN_IDENTITY="${CODESIGN_IDENTITY:--}"
 
 rm -rf \
 	"$APP_BUNDLE" \
@@ -71,5 +72,20 @@ xcrun actool \
 	--app-icon AppIcon \
 	--output-partial-info-plist "$BUILD_ROOT/actool-info.plist" \
 	"$ASSET_CATALOG" >/dev/null
+
+sign_target() {
+	local target="$1"
+
+	if [[ "$CODESIGN_IDENTITY" == "-" ]]; then
+		codesign --force --sign - "$target"
+	else
+		codesign --force --options runtime --timestamp --sign "$CODESIGN_IDENTITY" "$target"
+	fi
+}
+
+sign_target "$APP_BUNDLE/Contents/MacOS/$APP_NAME"
+sign_target "$APP_BUNDLE"
+
+codesign --verify --deep --strict --verbose=2 "$APP_BUNDLE"
 
 echo "App bundle created at: $APP_BUNDLE"
