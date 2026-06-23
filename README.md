@@ -38,6 +38,9 @@ The project aims to offer a small, focused editor for unformatted text on macOS 
 - One file per tab, with close controls directly in the tab strip
 - Automatic untitled tabs named `Untitle1`, `Untitle2`, and so on
 - Plain-text editing with undo support
+- Native search and replace actions from the Edit menu
+- Recent files list in the File menu
+- Selection transforms for uppercase, lowercase, and proper case
 - File-type-aware formatting for JSON, LJSON, XML, HTML, and POM
 - Light and dark appearance support based on the current macOS setting
 - Basic document state handling for unsaved changes
@@ -112,7 +115,7 @@ To create the archive locally:
 
 To publish a prebuilt app for users without requiring a local build:
 
-1. Push a tag such as `v0.1.0`
+1. Push a tag such as `v0.2.0`
 2. Let GitHub Actions run the `Release App` workflow
 3. Download or share the generated ZIP from the GitHub Release page
 
@@ -132,6 +135,9 @@ The project currently depends only on:
 ## Usage Examples
 
 - Create a new untitled tab and start typing plain text
+- Find and replace repeated text using the native macOS find interface
+- Reopen a recently used file from the File menu
+- Convert a selected snippet to uppercase, lowercase, or proper case from the Edit menu
 - Open a JSON file and use the Format action to pretty-print objects and keys
 - Open an XML or HTML file and normalize indentation by tag structure
 - Drag a supported file onto the PureText Dock icon to open it in a new tab

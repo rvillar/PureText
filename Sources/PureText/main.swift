@@ -1,9 +1,11 @@
 import AppKit
 
 /// Boots the AppKit application and hands lifecycle control to `AppDelegate`.
-let application = NSApplication.shared
-let delegate = AppDelegate()
+MainActor.assumeIsolated {
+    let application = NSApplication.shared
+    let delegate = AppDelegate()
 
-application.setActivationPolicy(.regular)
-application.delegate = delegate
-application.run()
+    application.setActivationPolicy(.regular)
+    application.delegate = delegate
+    application.run()
+}

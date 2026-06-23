@@ -1,7 +1,14 @@
 import AppKit
 
 /// Owns the main application window, custom tab strip, and document lifecycle actions.
+@MainActor
 final class MainWindowController: NSObject, NSWindowDelegate, NSToolbarDelegate {
+    enum SelectionTextTransform {
+        case uppercase
+        case lowercase
+        case proper
+    }
+
     private static let minimumWindowSize = NSSize(width: 920, height: 620)
     private static let defaultWindowSize = NSSize(width: 1040, height: 720)
 
@@ -58,6 +65,7 @@ final class MainWindowController: NSObject, NSWindowDelegate, NSToolbarDelegate 
         window.makeKeyAndOrderFront(nil)
         window.orderFrontRegardless()
         NSApp.activate(ignoringOtherApps: true)
+        currentTabController?.focusEditor()
     }
 
     /// Removes the bootstrapped empty tab when the app is opened directly with files.
@@ -169,6 +177,18 @@ final class MainWindowController: NSObject, NSWindowDelegate, NSToolbarDelegate 
         formatCurrentDocument()
     }
 
+    @objc func uppercaseSelectionAction(_ sender: Any?) {
+        transformSelectedText(.uppercase)
+    }
+
+    @objc func lowercaseSelectionAction(_ sender: Any?) {
+        transformSelectedText(.lowercase)
+    }
+
+    @objc func properSelectionAction(_ sender: Any?) {
+        transformSelectedText(.proper)
+    }
+
     /// Configures the app window shell and restores its last saved frame when possible.
     private func configureWindow() {
         window.title = L10n.appName
@@ -222,8 +242,8 @@ final class MainWindowController: NSObject, NSWindowDelegate, NSToolbarDelegate 
 
         tabStackView.orientation = .horizontal
         tabStackView.alignment = .centerY
-        tabStackView.spacing = 6
-        tabStackView.edgeInsets = NSEdgeInsets(top: 8, left: 12, bottom: 8, right: 12)
+        tabStackView.spacing = 4
+        tabStackView.edgeInsets = NSEdgeInsets(top: 4, left: 8, bottom: 4, right: 8)
         tabStackView.translatesAutoresizingMaskIntoConstraints = false
 
         let tabStripContentView = NSView()
@@ -244,7 +264,7 @@ final class MainWindowController: NSObject, NSWindowDelegate, NSToolbarDelegate 
             tabScrollView.leadingAnchor.constraint(equalTo: rootView.leadingAnchor),
             tabScrollView.trailingAnchor.constraint(equalTo: rootView.trailingAnchor),
             tabScrollView.topAnchor.constraint(equalTo: rootView.topAnchor),
-            tabScrollView.heightAnchor.constraint(equalToConstant: 48),
+            tabScrollView.heightAnchor.constraint(equalToConstant: 36),
 
             contentContainerView.leadingAnchor.constraint(equalTo: rootView.leadingAnchor),
             contentContainerView.trailingAnchor.constraint(equalTo: rootView.trailingAnchor),
@@ -299,6 +319,7 @@ final class MainWindowController: NSObject, NSWindowDelegate, NSToolbarDelegate 
         )
 
         addDocument(document, select: true)
+        noteRecentDocument(normalizedURL)
     }
 
     private func addDocument(_ document: EditorDocument, select: Bool) {
@@ -393,6 +414,7 @@ final class MainWindowController: NSObject, NSWindowDelegate, NSToolbarDelegate 
             try document.content.write(to: url, atomically: true, encoding: document.encoding)
             let fileType = NoteFileType.from(url: url) ?? document.fileType
             document.markSaved(url: url, fileType: fileType, encoding: document.encoding)
+            noteRecentDocument(url.standardizedFileURL)
             synchronizeWindowState()
             return true
         } catch {
@@ -424,6 +446,7 @@ final class MainWindowController: NSObject, NSWindowDelegate, NSToolbarDelegate 
 
         refreshTabBar()
         synchronizeWindowState()
+        tab.focusEditor()
     }
 
     private func clearCurrentContentView() {
@@ -506,6 +529,25 @@ final class MainWindowController: NSObject, NSWindowDelegate, NSToolbarDelegate 
             window.title = L10n.appName
             window.isDocumentEdited = false
         }
+    }
+
+    private func transformSelectedText(_ transform: SelectionTextTransform) {
+        guard let currentTabController else { return }
+
+        currentTabController.focusEditor()
+
+        switch transform {
+        case .uppercase:
+            currentTabController.transformSelectedText(.uppercase)
+        case .lowercase:
+            currentTabController.transformSelectedText(.lowercase)
+        case .proper:
+            currentTabController.transformSelectedText(.proper)
+        }
+    }
+
+    private func noteRecentDocument(_ url: URL) {
+        NSDocumentController.shared.noteNewRecentDocumentURL(url)
     }
 
     private func presentErrorAlert(title: String, error: Error) {

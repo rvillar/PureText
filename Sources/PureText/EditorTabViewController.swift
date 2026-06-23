@@ -2,6 +2,12 @@ import AppKit
 
 /// Hosts the plain-text editor view for a single open tab.
 final class EditorTabViewController: NSViewController, NSTextViewDelegate {
+    enum SelectionTextTransform {
+        case uppercase
+        case lowercase
+        case proper
+    }
+
     /// The document model currently edited by this tab.
     let document: EditorDocument
 
@@ -48,6 +54,43 @@ final class EditorTabViewController: NSViewController, NSTextViewDelegate {
         title = tabTitle
         view.window?.isDocumentEdited = document.isEdited
         view.window?.title = document.displayName
+    }
+
+    /// Makes the editor the active first responder for menu-driven text actions.
+    func focusEditor() {
+        guard isViewLoaded else { return }
+        view.window?.makeFirstResponder(textView)
+    }
+
+    /// Applies a letter-case transformation only to the current selection.
+    func transformSelectedText(_ transform: SelectionTextTransform) {
+        guard isViewLoaded else { return }
+
+        let selectedRange = textView.selectedRange()
+        guard selectedRange.length > 0 else { return }
+
+        let content = textView.string as NSString
+        let selectedText = content.substring(with: selectedRange)
+        let transformedText: String
+
+        switch transform {
+        case .uppercase:
+            transformedText = selectedText.uppercased(with: Locale.current)
+        case .lowercase:
+            transformedText = selectedText.lowercased(with: Locale.current)
+        case .proper:
+            transformedText = selectedText.lowercased(with: Locale.current).capitalized(with: Locale.current)
+        }
+
+        guard transformedText != selectedText else { return }
+        guard let textStorage = textView.textStorage else { return }
+        guard textView.shouldChangeText(in: selectedRange, replacementString: transformedText) else { return }
+
+        textStorage.replaceCharacters(in: selectedRange, with: transformedText)
+        textView.didChangeText()
+        textView.setSelectedRange(
+            NSRange(location: selectedRange.location, length: (transformedText as NSString).length)
+        )
     }
 
     /// The title rendered in the custom tab strip.

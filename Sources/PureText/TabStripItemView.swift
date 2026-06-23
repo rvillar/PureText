@@ -40,7 +40,7 @@ final class TabStripItemView: NSView {
     }
 
     override var intrinsicContentSize: NSSize {
-        NSSize(width: 180, height: 32)
+        NSSize(width: 164, height: 26)
     }
 
     /// Refreshes adaptive colors when the system appearance changes.
@@ -70,7 +70,7 @@ final class TabStripItemView: NSView {
 
     private func configureView() {
         wantsLayer = true
-        layer?.cornerRadius = 7
+        layer?.cornerRadius = 6
         layer?.borderWidth = 1
         translatesAutoresizingMaskIntoConstraints = false
     }
@@ -81,7 +81,7 @@ final class TabStripItemView: NSView {
         titleButton.setButtonType(.momentaryChange)
         titleButton.alignment = .left
         titleButton.lineBreakMode = .byTruncatingTail
-        titleButton.font = NSFont.systemFont(ofSize: 12, weight: .medium)
+        titleButton.font = NSFont.systemFont(ofSize: 11, weight: .medium)
         titleButton.contentTintColor = .labelColor
         titleButton.target = self
         titleButton.action = #selector(selectTab(_:))
@@ -106,8 +106,8 @@ final class TabStripItemView: NSView {
     private func configureLayout() {
         stackView.orientation = .horizontal
         stackView.alignment = .centerY
-        stackView.spacing = 8
-        stackView.edgeInsets = NSEdgeInsets(top: 4, left: 8, bottom: 4, right: 12)
+        stackView.spacing = 6
+        stackView.edgeInsets = NSEdgeInsets(top: 3, left: 6, bottom: 3, right: 8)
         stackView.translatesAutoresizingMaskIntoConstraints = false
 
         titleButton.translatesAutoresizingMaskIntoConstraints = false
@@ -122,9 +122,9 @@ final class TabStripItemView: NSView {
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
             stackView.topAnchor.constraint(equalTo: topAnchor),
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            widthAnchor.constraint(greaterThanOrEqualToConstant: 132),
-            closeButton.widthAnchor.constraint(equalToConstant: 18),
-            closeButton.heightAnchor.constraint(equalToConstant: 18),
+            widthAnchor.constraint(greaterThanOrEqualToConstant: 120),
+            closeButton.widthAnchor.constraint(equalToConstant: 14),
+            closeButton.heightAnchor.constraint(equalToConstant: 14),
         ])
     }
 

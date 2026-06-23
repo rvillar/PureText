@@ -1,8 +1,10 @@
 import AppKit
 
 /// Coordinates app lifecycle events and builds the top-level macOS menus.
-final class AppDelegate: NSObject, NSApplicationDelegate {
+@MainActor
+final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private let mainWindowController = MainWindowController()
+    private let openRecentSubmenu = NSMenu()
 
     /// Creates the initial document tab and presents the main window.
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -54,8 +56,22 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         mainWindowController.openDocumentAction(sender)
     }
 
+    @objc private func openRecentDocument(_ sender: Any?) {
+        guard let menuItem = sender as? NSMenuItem, let url = menuItem.representedObject as? URL else {
+            return
+        }
+
+        mainWindowController.openDocuments(at: [url])
+        mainWindowController.presentWindow()
+    }
+
     @objc private func saveDocument(_ sender: Any?) {
         mainWindowController.saveDocumentAction(sender)
+    }
+
+    @objc private func clearRecentDocuments(_ sender: Any?) {
+        NSDocumentController.shared.clearRecentDocuments(sender)
+        rebuildOpenRecentMenu()
     }
 
     @objc private func saveDocumentAs(_ sender: Any?) {
@@ -68,6 +84,18 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc private func formatDocument(_ sender: Any?) {
         mainWindowController.formatDocumentAction(sender)
+    }
+
+    @objc private func uppercaseSelection(_ sender: Any?) {
+        mainWindowController.uppercaseSelectionAction(sender)
+    }
+
+    @objc private func lowercaseSelection(_ sender: Any?) {
+        mainWindowController.lowercaseSelectionAction(sender)
+    }
+
+    @objc private func properSelection(_ sender: Any?) {
+        mainWindowController.properSelectionAction(sender)
     }
 
     /// Builds the standard macOS menu bar for the application.
@@ -96,6 +124,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         submenu.addItem(withTitle: L10n.newTab, action: #selector(newDocument(_:)), keyEquivalent: "n").target = self
         submenu.addItem(withTitle: L10n.open, action: #selector(openDocument(_:)), keyEquivalent: "o").target = self
+        submenu.addItem(buildOpenRecentMenu())
         submenu.addItem(.separator())
         submenu.addItem(withTitle: L10n.save, action: #selector(saveDocument(_:)), keyEquivalent: "s").target = self
         submenu.addItem(withTitle: L10n.saveAs, action: #selector(saveDocumentAs(_:)), keyEquivalent: "S").target = self
@@ -106,6 +135,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         fileItem.submenu = submenu
         return fileItem
+    }
+
+    private func buildOpenRecentMenu() -> NSMenuItem {
+        openRecentSubmenu.title = L10n.openRecent
+        openRecentSubmenu.delegate = self
+        rebuildOpenRecentMenu()
+
+        let item = NSMenuItem(title: L10n.openRecent, action: nil, keyEquivalent: "")
+        item.submenu = openRecentSubmenu
+        return item
     }
 
     private func buildEditMenu() -> NSMenuItem {
@@ -119,8 +158,105 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         submenu.addItem(withTitle: L10n.copy, action: #selector(NSText.copy(_:)), keyEquivalent: "c")
         submenu.addItem(withTitle: L10n.paste, action: #selector(NSText.paste(_:)), keyEquivalent: "v")
         submenu.addItem(withTitle: L10n.selectAll, action: #selector(NSText.selectAll(_:)), keyEquivalent: "a")
+        submenu.addItem(.separator())
+        submenu.addItem(buildFindMenu())
+        submenu.addItem(buildTransformSelectionMenu())
 
         editItem.submenu = submenu
         return editItem
+    }
+
+    private func buildFindMenu() -> NSMenuItem {
+        let item = NSMenuItem(title: L10n.findMenu, action: nil, keyEquivalent: "")
+        let submenu = NSMenu(title: L10n.findMenu)
+
+        submenu.addItem(makeTextFinderMenuItem(
+            title: L10n.find,
+            action: .showFindInterface,
+            keyEquivalent: "f"
+        ))
+        submenu.addItem(makeTextFinderMenuItem(
+            title: L10n.findNext,
+            action: .nextMatch,
+            keyEquivalent: "g"
+        ))
+        submenu.addItem(makeTextFinderMenuItem(
+            title: L10n.findPrevious,
+            action: .previousMatch,
+            keyEquivalent: "g",
+            modifiers: [.command, .shift]
+        ))
+        submenu.addItem(.separator())
+        submenu.addItem(makeTextFinderMenuItem(
+            title: L10n.useSelectionForFind,
+            action: .setSearchString,
+            keyEquivalent: "e"
+        ))
+        submenu.addItem(.separator())
+        submenu.addItem(makeTextFinderMenuItem(
+            title: L10n.replace,
+            action: .showReplaceInterface,
+            keyEquivalent: "f",
+            modifiers: [.command, .option]
+        ))
+
+        item.submenu = submenu
+        return item
+    }
+
+    private func buildTransformSelectionMenu() -> NSMenuItem {
+        let item = NSMenuItem(title: L10n.transformSelectionMenu, action: nil, keyEquivalent: "")
+        let submenu = NSMenu(title: L10n.transformSelectionMenu)
+
+        submenu.addItem(withTitle: L10n.uppercaseSelection, action: #selector(uppercaseSelection(_:)), keyEquivalent: "").target = self
+        submenu.addItem(withTitle: L10n.lowercaseSelection, action: #selector(lowercaseSelection(_:)), keyEquivalent: "").target = self
+        submenu.addItem(withTitle: L10n.properSelection, action: #selector(properSelection(_:)), keyEquivalent: "").target = self
+
+        item.submenu = submenu
+        return item
+    }
+
+    private func makeTextFinderMenuItem(
+        title: String,
+        action: NSTextFinder.Action,
+        keyEquivalent: String,
+        modifiers: NSEvent.ModifierFlags = [.command]
+    ) -> NSMenuItem {
+        let item = NSMenuItem(
+            title: title,
+            action: #selector(NSResponder.performTextFinderAction(_:)),
+            keyEquivalent: keyEquivalent
+        )
+        item.keyEquivalentModifierMask = modifiers
+        item.tag = action.rawValue
+        return item
+    }
+
+    func menuNeedsUpdate(_ menu: NSMenu) {
+        guard menu == openRecentSubmenu else { return }
+        rebuildOpenRecentMenu()
+    }
+
+    private func rebuildOpenRecentMenu() {
+        openRecentSubmenu.removeAllItems()
+
+        let recentURLs = NSDocumentController.shared.recentDocumentURLs
+        if recentURLs.isEmpty {
+            let emptyItem = NSMenuItem(title: L10n.noRecentDocuments, action: nil, keyEquivalent: "")
+            emptyItem.isEnabled = false
+            openRecentSubmenu.addItem(emptyItem)
+            return
+        }
+
+        for url in recentURLs {
+            let item = NSMenuItem(title: url.lastPathComponent, action: #selector(openRecentDocument(_:)), keyEquivalent: "")
+            item.target = self
+            item.representedObject = url
+            item.toolTip = url.path
+            openRecentSubmenu.addItem(item)
+        }
+
+        openRecentSubmenu.addItem(.separator())
+        openRecentSubmenu.addItem(withTitle: L10n.clearMenu, action: #selector(clearRecentDocuments(_:)), keyEquivalent: "").target = self
     }
 }

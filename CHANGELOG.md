@@ -8,9 +8,22 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 ## [Unreleased]
 
 ### Added
+- Recent files submenu in File, with dynamic entries and a clear-history action.
+
+### Changed
+
+### Fixed
+
+### Removed
+
+## [0.2.0] - 2026-06-23
+
+### Added
 - GitHub Actions release workflow for publishing prebuilt macOS ZIP archives.
 - Local release packaging script for generating a distributable archive from `PureText.app`.
 - Support for opening and saving `.md`, `.yml`, `.bru`, and `.pom` files.
+- Text search and replace actions in the Edit menu using the native AppKit find flow.
+- Selection transforms for uppercase, lowercase, and proper case in the Edit menu.
 
 ### Changed
 - The release workflow now publishes a GitHub Release for both tag-based and manually triggered runs.

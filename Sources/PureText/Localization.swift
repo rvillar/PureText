@@ -43,6 +43,56 @@ enum L10n {
         localized(english: "Edit", portuguese: "Editar")
     }
 
+    /// Localized string for the Find submenu title.
+    static var findMenu: String {
+        localized(english: "Find", portuguese: "Localizar")
+    }
+
+    /// Localized string for opening the search UI.
+    static var find: String {
+        localized(english: "Find…", portuguese: "Localizar…")
+    }
+
+    /// Localized string for moving to the next match.
+    static var findNext: String {
+        localized(english: "Find Next", portuguese: "Localizar Próxima")
+    }
+
+    /// Localized string for moving to the previous match.
+    static var findPrevious: String {
+        localized(english: "Find Previous", portuguese: "Localizar Anterior")
+    }
+
+    /// Localized string for using the current selection as the search text.
+    static var useSelectionForFind: String {
+        localized(english: "Use Selection for Find", portuguese: "Usar Seleção para Localizar")
+    }
+
+    /// Localized string for opening the replace UI.
+    static var replace: String {
+        localized(english: "Replace…", portuguese: "Substituir…")
+    }
+
+    /// Localized string for the selection-transform submenu title.
+    static var transformSelectionMenu: String {
+        localized(english: "Transform Selection", portuguese: "Transformar Seleção")
+    }
+
+    /// Localized string for uppercasing the selection.
+    static var uppercaseSelection: String {
+        localized(english: "Uppercase", portuguese: "Maiúsculas")
+    }
+
+    /// Localized string for lowercasing the selection.
+    static var lowercaseSelection: String {
+        localized(english: "Lowercase", portuguese: "Minúsculas")
+    }
+
+    /// Localized string for proper-casing the selection.
+    static var properSelection: String {
+        localized(english: "Proper", portuguese: "Iniciais Maiúsculas")
+    }
+
     /// Localized string for the New Tab command.
     static var newTab: String {
         localized(english: "New Tab", portuguese: "Nova Aba")
@@ -51,6 +101,21 @@ enum L10n {
     /// Localized string for the Open command.
     static var open: String {
         localized(english: "Open…", portuguese: "Abrir…")
+    }
+
+    /// Localized string for the Open Recent submenu title.
+    static var openRecent: String {
+        localized(english: "Open Recent", portuguese: "Abrir Recentes")
+    }
+
+    /// Localized string for an empty recent-documents list.
+    static var noRecentDocuments: String {
+        localized(english: "No Recent Documents", portuguese: "Nenhum Documento Recente")
+    }
+
+    /// Localized string for clearing the recent-documents list.
+    static var clearMenu: String {
+        localized(english: "Clear Menu", portuguese: "Limpar Menu")
     }
 
     /// Localized string for the Save command.
