@@ -5,7 +5,6 @@ import AppKit
 final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private let mainWindowController = MainWindowController()
     private let openRecentSubmenu = NSMenu()
-    private let showSpecialCharactersMenuItem = NSMenuItem()
 
     /// Creates the initial document tab and presents the main window.
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -99,18 +98,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         mainWindowController.properSelectionAction(sender)
     }
 
-    @objc private func toggleSpecialCharactersVisibility(_ sender: Any?) {
-        mainWindowController.toggleSpecialCharactersVisibilityAction(sender)
-        synchronizeViewMenuState()
-    }
-
     /// Builds the standard macOS menu bar for the application.
     private func buildMainMenu() {
         let mainMenu = NSMenu()
         mainMenu.addItem(buildApplicationMenu())
         mainMenu.addItem(buildFileMenu())
         mainMenu.addItem(buildEditMenu())
-        mainMenu.addItem(buildViewMenu())
         NSApp.mainMenu = mainMenu
     }
 
@@ -171,20 +164,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
         editItem.submenu = submenu
         return editItem
-    }
-
-    private func buildViewMenu() -> NSMenuItem {
-        let viewItem = NSMenuItem(title: L10n.viewMenu, action: nil, keyEquivalent: "")
-        let submenu = NSMenu(title: L10n.viewMenu)
-
-        showSpecialCharactersMenuItem.title = L10n.showSpecialCharacters
-        showSpecialCharactersMenuItem.action = #selector(toggleSpecialCharactersVisibility(_:))
-        showSpecialCharactersMenuItem.target = self
-        submenu.addItem(showSpecialCharactersMenuItem)
-        synchronizeViewMenuState()
-
-        viewItem.submenu = submenu
-        return viewItem
     }
 
     private func buildFindMenu() -> NSMenuItem {
@@ -279,9 +258,5 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
         openRecentSubmenu.addItem(.separator())
         openRecentSubmenu.addItem(withTitle: L10n.clearMenu, action: #selector(clearRecentDocuments(_:)), keyEquivalent: "").target = self
-    }
-
-    private func synchronizeViewMenuState() {
-        showSpecialCharactersMenuItem.state = mainWindowController.isShowingSpecialCharacters ? .on : .off
     }
 }

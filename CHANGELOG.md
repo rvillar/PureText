@@ -15,14 +15,16 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ### Removed
 
-## [0.3.0] - 2026-06-27
+## [0.3.2] - 2026-06-27
 
 ### Added
 - Recent files submenu in File, with dynamic entries and a clear-history action.
-- View menu toggle for showing tabs, enters, and linefeeds in the editor.
 
 ### Changed
 - The tab close button now appears on the right side of each custom tab.
+- The tab close button is now pushed closer to the right edge of the tab, independent of the title width.
+- The main window header now uses a more compact visual height.
+- The unsupported View-menu toggle for showing tabs, enters, and linefeeds was removed to preserve the plain-text editing behavior.
 - Release publication documentation was expanded to cover preflight review, GitHub workflow execution, and post-publication verification.
 
 ### Fixed

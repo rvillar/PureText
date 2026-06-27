@@ -11,6 +11,7 @@ final class MainWindowController: NSObject, NSWindowDelegate, NSToolbarDelegate 
 
     private static let minimumWindowSize = NSSize(width: 920, height: 620)
     private static let defaultWindowSize = NSSize(width: 1040, height: 720)
+    private static let tabStripHeight: CGFloat = 30
 
     let window: NSWindow
 
@@ -22,7 +23,6 @@ final class MainWindowController: NSObject, NSWindowDelegate, NSToolbarDelegate 
     private var tabControllers: [EditorTabViewController] = []
     private var selectedTabIndex: Int?
     private var nextUntitledNumber = 1
-    private var showsSpecialCharacters = false
 
     override init() {
         self.window = NSWindow(
@@ -52,11 +52,6 @@ final class MainWindowController: NSObject, NSWindowDelegate, NSToolbarDelegate 
     /// Indicates whether any open document has unsaved changes.
     var hasEditedDocuments: Bool {
         documents.contains(where: \.isEdited)
-    }
-
-    /// Indicates whether the editor is currently showing tabs, linefeeds, and control characters.
-    var isShowingSpecialCharacters: Bool {
-        showsSpecialCharacters
     }
 
     /// Creates a new untitled tab and selects it.
@@ -195,15 +190,12 @@ final class MainWindowController: NSObject, NSWindowDelegate, NSToolbarDelegate 
         transformSelectedText(.proper)
     }
 
-    @objc func toggleSpecialCharactersVisibilityAction(_ sender: Any?) {
-        showsSpecialCharacters.toggle()
-        synchronizeSpecialCharacterVisibility()
-    }
-
     /// Configures the app window shell and restores its last saved frame when possible.
     private func configureWindow() {
         window.title = L10n.appName
         window.titlebarAppearsTransparent = false
+        window.titleVisibility = .hidden
+        window.toolbarStyle = .unifiedCompact
         window.tabbingMode = .disallowed
         window.minSize = Self.minimumWindowSize
         window.setFrameAutosaveName("PureTextMainWindow")
@@ -254,7 +246,7 @@ final class MainWindowController: NSObject, NSWindowDelegate, NSToolbarDelegate 
         tabStackView.orientation = .horizontal
         tabStackView.alignment = .centerY
         tabStackView.spacing = 4
-        tabStackView.edgeInsets = NSEdgeInsets(top: 4, left: 8, bottom: 4, right: 8)
+        tabStackView.edgeInsets = NSEdgeInsets(top: 2, left: 8, bottom: 2, right: 8)
         tabStackView.translatesAutoresizingMaskIntoConstraints = false
 
         let tabStripContentView = NSView()
@@ -275,7 +267,7 @@ final class MainWindowController: NSObject, NSWindowDelegate, NSToolbarDelegate 
             tabScrollView.leadingAnchor.constraint(equalTo: rootView.leadingAnchor),
             tabScrollView.trailingAnchor.constraint(equalTo: rootView.trailingAnchor),
             tabScrollView.topAnchor.constraint(equalTo: rootView.topAnchor),
-            tabScrollView.heightAnchor.constraint(equalToConstant: 36),
+            tabScrollView.heightAnchor.constraint(equalToConstant: Self.tabStripHeight),
 
             contentContainerView.leadingAnchor.constraint(equalTo: rootView.leadingAnchor),
             contentContainerView.trailingAnchor.constraint(equalTo: rootView.trailingAnchor),
@@ -294,6 +286,7 @@ final class MainWindowController: NSObject, NSWindowDelegate, NSToolbarDelegate 
     private func configureToolbar() {
         let toolbar = NSToolbar(identifier: "PureTextToolbar")
         toolbar.displayMode = .iconOnly
+        toolbar.sizeMode = .small
         toolbar.delegate = self
         toolbar.allowsUserCustomization = false
         window.toolbar = toolbar
@@ -335,7 +328,6 @@ final class MainWindowController: NSObject, NSWindowDelegate, NSToolbarDelegate 
 
     private func addDocument(_ document: EditorDocument, select: Bool) {
         let tab = EditorTabViewController(document: document)
-        tab.setShowsSpecialCharacters(showsSpecialCharacters)
         document.onStateChange = { [weak self, weak tab] in
             tab?.refreshTabState()
             self?.refreshTabBar()
@@ -540,12 +532,6 @@ final class MainWindowController: NSObject, NSWindowDelegate, NSToolbarDelegate 
         } else {
             window.title = L10n.appName
             window.isDocumentEdited = false
-        }
-    }
-
-    private func synchronizeSpecialCharacterVisibility() {
-        for tab in tabControllers {
-            tab.setShowsSpecialCharacters(showsSpecialCharacters)
         }
     }
 

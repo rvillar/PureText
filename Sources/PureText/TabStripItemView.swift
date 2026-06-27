@@ -5,6 +5,7 @@ final class TabStripItemView: NSView {
     private let titleButton = NSButton(title: "", target: nil, action: nil)
     private let closeButton = NSButton()
     private let stackView = NSStackView()
+    private let spacerView = NSView()
 
     /// Called when the user selects the tab body.
     var onSelect: (() -> Void)?
@@ -40,7 +41,7 @@ final class TabStripItemView: NSView {
     }
 
     override var intrinsicContentSize: NSSize {
-        NSSize(width: 164, height: 26)
+        NSSize(width: 164, height: 22)
     }
 
     /// Refreshes adaptive colors when the system appearance changes.
@@ -70,8 +71,9 @@ final class TabStripItemView: NSView {
 
     private func configureView() {
         wantsLayer = true
-        layer?.cornerRadius = 6
+        layer?.cornerRadius = 5
         layer?.borderWidth = 1
+        layer?.shadowOffset = .zero
         translatesAutoresizingMaskIntoConstraints = false
     }
 
@@ -103,13 +105,17 @@ final class TabStripItemView: NSView {
         closeButton.action = #selector(closeTab(_:))
         closeButton.focusRingType = .none
         closeButton.setContentCompressionResistancePriority(.required, for: .horizontal)
+
+        spacerView.translatesAutoresizingMaskIntoConstraints = false
+        spacerView.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        spacerView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
     }
 
     private func configureLayout() {
         stackView.orientation = .horizontal
         stackView.alignment = .centerY
-        stackView.spacing = 6
-        stackView.edgeInsets = NSEdgeInsets(top: 3, left: 6, bottom: 3, right: 8)
+        stackView.spacing = 4
+        stackView.edgeInsets = NSEdgeInsets(top: 2, left: 6, bottom: 2, right: 6)
         stackView.translatesAutoresizingMaskIntoConstraints = false
 
         titleButton.translatesAutoresizingMaskIntoConstraints = false
@@ -117,6 +123,7 @@ final class TabStripItemView: NSView {
 
         addSubview(stackView)
         stackView.addArrangedSubview(titleButton)
+        stackView.addArrangedSubview(spacerView)
         stackView.addArrangedSubview(closeButton)
 
         NSLayoutConstraint.activate([
@@ -125,6 +132,7 @@ final class TabStripItemView: NSView {
             stackView.topAnchor.constraint(equalTo: topAnchor),
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
             widthAnchor.constraint(greaterThanOrEqualToConstant: 120),
+            spacerView.widthAnchor.constraint(greaterThanOrEqualToConstant: 0),
             closeButton.widthAnchor.constraint(equalToConstant: 14),
             closeButton.heightAnchor.constraint(equalToConstant: 14),
         ])
@@ -136,13 +144,20 @@ final class TabStripItemView: NSView {
 
         layer?.backgroundColor = backgroundColor.cgColor
         layer?.borderColor = borderColor.cgColor
-        titleButton.contentTintColor = isSelected ? .labelColor : .secondaryLabelColor
-        closeButton.contentTintColor = isSelected ? .labelColor : .secondaryLabelColor
+        layer?.borderWidth = isSelected ? 2 : 1
+        layer?.shadowColor = selectedShadowColor.cgColor
+        layer?.shadowOpacity = isSelected ? 0.18 : 0
+        layer?.shadowRadius = isSelected ? 3 : 0
+
+        titleButton.contentTintColor = isSelected ? selectedForegroundColor : .secondaryLabelColor
+        closeButton.contentTintColor = isSelected ? selectedForegroundColor : .secondaryLabelColor
     }
 
     private var selectedBackgroundColor: NSColor {
-        dynamicColor(light: NSColor(calibratedWhite: 0.86, alpha: 1.0),
-                     dark: NSColor(calibratedWhite: 0.24, alpha: 1.0))
+        dynamicColor(
+            light: NSColor(calibratedRed: 0.82, green: 0.88, blue: 0.98, alpha: 1.0),
+            dark: NSColor(calibratedRed: 0.22, green: 0.30, blue: 0.44, alpha: 1.0)
+        )
     }
 
     private var idleBackgroundColor: NSColor {
@@ -151,13 +166,29 @@ final class TabStripItemView: NSView {
     }
 
     private var selectedBorderColor: NSColor {
-        dynamicColor(light: NSColor(calibratedWhite: 0.70, alpha: 1.0),
-                     dark: NSColor(calibratedWhite: 0.34, alpha: 1.0))
+        dynamicColor(
+            light: NSColor(calibratedRed: 0.34, green: 0.52, blue: 0.83, alpha: 1.0),
+            dark: NSColor(calibratedRed: 0.44, green: 0.62, blue: 0.95, alpha: 1.0)
+        )
     }
 
     private var idleBorderColor: NSColor {
         dynamicColor(light: NSColor(calibratedWhite: 0.84, alpha: 1.0),
                      dark: NSColor(calibratedWhite: 0.22, alpha: 1.0))
+    }
+
+    private var selectedForegroundColor: NSColor {
+        dynamicColor(
+            light: NSColor(calibratedWhite: 0.12, alpha: 1.0),
+            dark: NSColor(calibratedWhite: 0.98, alpha: 1.0)
+        )
+    }
+
+    private var selectedShadowColor: NSColor {
+        dynamicColor(
+            light: NSColor(calibratedWhite: 0.18, alpha: 1.0),
+            dark: NSColor(calibratedRed: 0.06, green: 0.09, blue: 0.14, alpha: 1.0)
+        )
     }
 
     private func dynamicColor(light: NSColor, dark: NSColor) -> NSColor {
