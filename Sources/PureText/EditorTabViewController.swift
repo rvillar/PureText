@@ -14,6 +14,7 @@ final class EditorTabViewController: NSViewController, NSTextViewDelegate {
     private let scrollView = NSScrollView()
     private let textView = NSTextView()
     private var isApplyingProgrammaticChange = false
+    private var showsSpecialCharacters = false
 
     /// Creates an editor controller bound to a document model.
     init(document: EditorDocument) {
@@ -31,6 +32,7 @@ final class EditorTabViewController: NSViewController, NSTextViewDelegate {
         view = NSView()
         configureTextView()
         configureLayout()
+        applySpecialCharacterVisibility()
         refreshContent()
         refreshTabState()
     }
@@ -60,6 +62,13 @@ final class EditorTabViewController: NSViewController, NSTextViewDelegate {
     func focusEditor() {
         guard isViewLoaded else { return }
         view.window?.makeFirstResponder(textView)
+    }
+
+    /// Toggles the visual rendering of tabs, linefeeds, and control characters in the editor.
+    func setShowsSpecialCharacters(_ shows: Bool) {
+        showsSpecialCharacters = shows
+        guard isViewLoaded else { return }
+        applySpecialCharacterVisibility()
     }
 
     /// Applies a letter-case transformation only to the current selection.
@@ -148,5 +157,11 @@ final class EditorTabViewController: NSViewController, NSTextViewDelegate {
             scrollView.topAnchor.constraint(equalTo: view.topAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
+    }
+
+    private func applySpecialCharacterVisibility() {
+        guard let layoutManager = textView.layoutManager else { return }
+        layoutManager.showsInvisibleCharacters = false
+        layoutManager.showsControlCharacters = showsSpecialCharacters
     }
 }

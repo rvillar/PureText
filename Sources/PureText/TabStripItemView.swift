@@ -88,6 +88,7 @@ final class TabStripItemView: NSView {
         titleButton.setButtonType(.momentaryChange)
         titleButton.focusRingType = .none
         titleButton.imagePosition = .noImage
+        titleButton.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
 
         closeButton.isBordered = false
         closeButton.bezelStyle = .regularSquare
@@ -101,6 +102,7 @@ final class TabStripItemView: NSView {
         closeButton.target = self
         closeButton.action = #selector(closeTab(_:))
         closeButton.focusRingType = .none
+        closeButton.setContentCompressionResistancePriority(.required, for: .horizontal)
     }
 
     private func configureLayout() {
@@ -114,8 +116,8 @@ final class TabStripItemView: NSView {
         closeButton.translatesAutoresizingMaskIntoConstraints = false
 
         addSubview(stackView)
-        stackView.addArrangedSubview(closeButton)
         stackView.addArrangedSubview(titleButton)
+        stackView.addArrangedSubview(closeButton)
 
         NSLayoutConstraint.activate([
             stackView.leadingAnchor.constraint(equalTo: leadingAnchor),

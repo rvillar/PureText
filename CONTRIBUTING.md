@@ -24,6 +24,16 @@ Please keep pull requests focused and include:
 - screenshots or a short screen recording for visible UI changes
 
 If the change affects supported file types, document the behavior in `README.md` and `CHANGELOG.md`.
+If the change is meant to ship in the next GitHub release, also review the release publication steps in `README.md`.
+
+## Release Documentation
+
+Before opening or merging a release-oriented change, make sure the repository documentation stays aligned with what users will download from GitHub:
+
+- update `README.md` when install steps, supported behavior, screenshots, or release instructions change
+- update `CHANGELOG.md` with the user-visible scope of the release
+- confirm the version referenced in release notes matches `App/Info.plist`
+- mention any required manual verification steps in the pull request description when the UI or packaging flow changes
 
 ## Code Style
 

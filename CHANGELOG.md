@@ -8,9 +8,22 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 ## [Unreleased]
 
 ### Added
-- Recent files submenu in File, with dynamic entries and a clear-history action.
 
 ### Changed
+
+### Fixed
+
+### Removed
+
+## [0.3.0] - 2026-06-27
+
+### Added
+- Recent files submenu in File, with dynamic entries and a clear-history action.
+- View menu toggle for showing tabs, enters, and linefeeds in the editor.
+
+### Changed
+- The tab close button now appears on the right side of each custom tab.
+- Release publication documentation was expanded to cover preflight review, GitHub workflow execution, and post-publication verification.
 
 ### Fixed
 

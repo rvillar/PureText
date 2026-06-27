@@ -43,6 +43,11 @@ enum L10n {
         localized(english: "Edit", portuguese: "Editar")
     }
 
+    /// Localized string for the View menu title.
+    static var viewMenu: String {
+        localized(english: "View", portuguese: "Visualizar")
+    }
+
     /// Localized string for the Find submenu title.
     static var findMenu: String {
         localized(english: "Find", portuguese: "Localizar")
@@ -71,6 +76,14 @@ enum L10n {
     /// Localized string for opening the replace UI.
     static var replace: String {
         localized(english: "Replace…", portuguese: "Substituir…")
+    }
+
+    /// Localized string for toggling the display of special characters.
+    static var showSpecialCharacters: String {
+        localized(
+            english: "Show Tabs, Enters, and Linefeeds",
+            portuguese: "Exibir Tab, Enter e Linefeed"
+        )
     }
 
     /// Localized string for the selection-transform submenu title.

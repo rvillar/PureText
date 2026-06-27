@@ -22,6 +22,7 @@ final class MainWindowController: NSObject, NSWindowDelegate, NSToolbarDelegate 
     private var tabControllers: [EditorTabViewController] = []
     private var selectedTabIndex: Int?
     private var nextUntitledNumber = 1
+    private var showsSpecialCharacters = false
 
     override init() {
         self.window = NSWindow(
@@ -51,6 +52,11 @@ final class MainWindowController: NSObject, NSWindowDelegate, NSToolbarDelegate 
     /// Indicates whether any open document has unsaved changes.
     var hasEditedDocuments: Bool {
         documents.contains(where: \.isEdited)
+    }
+
+    /// Indicates whether the editor is currently showing tabs, linefeeds, and control characters.
+    var isShowingSpecialCharacters: Bool {
+        showsSpecialCharacters
     }
 
     /// Creates a new untitled tab and selects it.
@@ -189,6 +195,11 @@ final class MainWindowController: NSObject, NSWindowDelegate, NSToolbarDelegate 
         transformSelectedText(.proper)
     }
 
+    @objc func toggleSpecialCharactersVisibilityAction(_ sender: Any?) {
+        showsSpecialCharacters.toggle()
+        synchronizeSpecialCharacterVisibility()
+    }
+
     /// Configures the app window shell and restores its last saved frame when possible.
     private func configureWindow() {
         window.title = L10n.appName
@@ -324,6 +335,7 @@ final class MainWindowController: NSObject, NSWindowDelegate, NSToolbarDelegate 
 
     private func addDocument(_ document: EditorDocument, select: Bool) {
         let tab = EditorTabViewController(document: document)
+        tab.setShowsSpecialCharacters(showsSpecialCharacters)
         document.onStateChange = { [weak self, weak tab] in
             tab?.refreshTabState()
             self?.refreshTabBar()
@@ -528,6 +540,12 @@ final class MainWindowController: NSObject, NSWindowDelegate, NSToolbarDelegate 
         } else {
             window.title = L10n.appName
             window.isDocumentEdited = false
+        }
+    }
+
+    private func synchronizeSpecialCharacterVisibility() {
+        for tab in tabControllers {
+            tab.setShowsSpecialCharacters(showsSpecialCharacters)
         }
     }
 

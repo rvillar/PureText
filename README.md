@@ -40,6 +40,7 @@ The project aims to offer a small, focused editor for unformatted text on macOS 
 - Plain-text editing with undo support
 - Native search and replace actions from the Edit menu
 - Recent files list in the File menu
+- View menu toggle for showing tabs, enters, and linefeeds in the editor
 - Selection transforms for uppercase, lowercase, and proper case
 - File-type-aware formatting for JSON, LJSON, XML, HTML, and POM
 - Light and dark appearance support based on the current macOS setting
@@ -113,13 +114,30 @@ To create the archive locally:
 ./scripts/package_release.sh
 ```
 
+## GitHub Release Publication
+
+Before publishing a new release on GitHub:
+
+1. Update the user-facing documentation affected by the release.
+2. Review `CHANGELOG.md` and move the shipped items out of `Unreleased`.
+3. Confirm `App/Info.plist` contains the version that should be published.
+4. Optionally refresh screenshots if the interface changed.
+5. Validate the package locally with `./scripts/package_release.sh` when practical.
+
 To publish a prebuilt app for users without requiring a local build:
 
-1. Push a tag such as `v0.2.0`
+1. Push a tag such as `v0.3.0`
 2. Let GitHub Actions run the `Release App` workflow
 3. Download or share the generated ZIP from the GitHub Release page
 
 The workflow also supports manual execution through **Actions > Release App > Run workflow**, and manual runs now create or update a GitHub Release using the provided version label or the current `Info.plist` version.
+
+After the workflow finishes:
+
+1. Verify the release title matches the app version.
+2. Confirm the asset name follows `PureText-<version>-macOS.zip`.
+3. Check that the generated notes or manual summary match the shipped features.
+4. Download the ZIP once to confirm the archive expands into `PureText.app`.
 
 If you plan to distribute signed builds outside your machine, you will still need to add your own code signing, notarization, and release automation.
 
@@ -137,6 +155,7 @@ The project currently depends only on:
 - Create a new untitled tab and start typing plain text
 - Find and replace repeated text using the native macOS find interface
 - Reopen a recently used file from the File menu
+- Toggle visible tabs, enters, and linefeeds from the View menu when inspecting raw text structure
 - Convert a selected snippet to uppercase, lowercase, or proper case from the Edit menu
 - Open a JSON file and use the Format action to pretty-print objects and keys
 - Open an XML or HTML file and normalize indentation by tag structure
@@ -167,6 +186,7 @@ For changes that affect behavior, include:
 - a short explanation of the user impact
 - the macOS and Xcode version used for testing
 - screenshots or short recordings when the UI changes
+- updates to `README.md` and `CHANGELOG.md` when release-facing behavior changes
 
 ## License
 
