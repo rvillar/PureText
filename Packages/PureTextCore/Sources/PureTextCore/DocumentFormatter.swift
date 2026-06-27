@@ -1,31 +1,27 @@
 import Foundation
 
 /// Errors returned by the content formatter when a file cannot be reformatted safely.
-enum DocumentFormatterError: LocalizedError {
+public enum DocumentFormatterError: LocalizedError, Sendable {
     case formattingUnavailable(NoteFileType)
     case invalidTextEncoding
-    case invalidLineJSON(line: Int, underlying: Error)
+    case invalidLineJSON(line: Int, underlying: String)
 
-    var errorDescription: String? {
+    public var errorDescription: String? {
         switch self {
         case .formattingUnavailable(let fileType):
-            return L10n.formattingUnavailable(for: fileType.displayName)
+            return PureTextCoreL10n.formattingUnavailable(for: fileType.displayName)
         case .invalidTextEncoding:
-            return L10n.invalidUTF8Content
+            return PureTextCoreL10n.invalidUTF8Content
         case .invalidLineJSON(let line, let underlying):
-            return L10n.invalidLineJSON(line: line, detail: underlying.localizedDescription)
+            return PureTextCoreL10n.invalidLineJSON(line: line, detail: underlying)
         }
     }
 }
 
 /// Formats supported plain-text content types while preserving a text-only editing model.
-enum DocumentFormatter {
+public enum DocumentFormatter {
     /// Formats text according to the file type-specific rules.
-    /// - Parameters:
-    ///   - text: The raw text content to format.
-    ///   - fileType: The semantic type used to choose the formatting strategy.
-    /// - Returns: Reformatted text suitable for replacing the editor contents.
-    static func format(_ text: String, as fileType: NoteFileType) throws -> String {
+    public static func format(_ text: String, as fileType: NoteFileType) throws -> String {
         switch fileType {
         case .json:
             return try prettyPrintedJSON(text)
@@ -63,7 +59,10 @@ enum DocumentFormatter {
             do {
                 return try prettyPrintedJSON(String(line))
             } catch {
-                throw DocumentFormatterError.invalidLineJSON(line: index + 1, underlying: error)
+                throw DocumentFormatterError.invalidLineJSON(
+                    line: index + 1,
+                    underlying: error.localizedDescription
+                )
             }
         }
 

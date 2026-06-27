@@ -30,6 +30,19 @@ The project aims to offer a small, focused editor for unformatted text on macOS 
 - Framework: AppKit
 - Language: Swift
 - Build system: Swift Package Manager for development, plus a packaging script for generating a `.app` bundle
+- Shared core: local Swift package `Packages/PureTextCore` for logic intended to stay compatible with macOS and iOS
+
+## Repository Layout
+
+- `Sources/PureText`: current macOS app implementation and AppKit UI
+- `Packages/PureTextCore`: shared logic that must remain compatible with macOS and iOS
+- `Apps/PureTextiOS`: initial iOS/iPadOS app project scaffold for local Xcode development and device installation
+
+## Current Status
+
+- macOS remains the published app distributed through GitHub Releases.
+- iOS now has a local Xcode project scaffold validated on a personal device for opening, editing, saving, reopening, formatting JSON, and restoring an unsaved session draft.
+- iOS distribution is still limited to local installation through Xcode during this phase.
 
 ## Features
 
@@ -70,13 +83,77 @@ cd PureText
 
 ### Open in Xcode
 
-This repository does not use an `.xcodeproj` file. Open the Swift package directly:
+The macOS app does not use an `.xcodeproj` file. Open the Swift package directly:
 
 1. Open Xcode.
 2. Choose **File > Open...**
 3. Select the repository folder or `Package.swift`
 
-Xcode will load the package as a macOS executable target named `PureText`.
+Xcode will load the package as a macOS executable target named `PureText`, together with the local package dependency `PureTextCore`.
+
+### Open the iOS app in Xcode
+
+The iOS app now lives in its own Xcode project:
+
+1. Open Xcode.
+2. Choose **File > Open...**
+3. Select `Apps/PureTextiOS/PureTextiOS.xcodeproj`
+
+The project contains the `PureTextiOS` target, depends on the local package `Packages/PureTextCore`, and is intended for local device installation during this phase.
+Local signing and publishing settings should stay in `Apps/PureTextiOS/Config/Local.xcconfig`, which is ignored by Git. The repository only keeps `Shared.xcconfig` and `Local.example.xcconfig`.
+
+The current iOS MVP has already been validated locally on-device for:
+
+- `.txt` open, edit, save, close, and reopen
+- `.md` open, edit, and save
+- `.json` open, edit, format, save, and reopen
+- unsaved session draft recovery after backgrounding and reopening the app
+
+### Local iOS signing
+
+To keep personal Apple Developer settings out of GitHub:
+
+1. Copy `Apps/PureTextiOS/Config/Local.example.xcconfig` to `Apps/PureTextiOS/Config/Local.xcconfig`
+2. Set your local `PURETEXT_IOS_BUNDLE_IDENTIFIER`
+3. Set your local `PURETEXT_IOS_DEVELOPMENT_TEAM`
+4. Keep using Xcode automatic signing locally
+
+`Local.xcconfig` is ignored by Git and should not be committed.
+The tracked `Shared.xcconfig` intentionally keeps only safe placeholder defaults.
+
+### Install on your iPhone
+
+For personal use and direct device installation, this is the current recommended iOS flow:
+
+1. Open `Apps/PureTextiOS/PureTextiOS.xcodeproj` in Xcode
+2. Select your iPhone as the run destination
+3. Keep local signing in `Apps/PureTextiOS/Config/Local.xcconfig`
+4. Use **Product > Run**
+
+This path does not require App Store Connect.
+
+### Optional local iOS archive
+
+To generate a local iOS release archive from Terminal:
+
+```bash
+./scripts/archive_ios_app.sh
+```
+
+This is useful for internal validation, but not required for day-to-day installation on your own iPhone.
+
+### Future App Store preparation
+
+For the safe local workflow to archive, validate, and upload the iOS app without committing Apple-specific data, see [`docs/ios-app-store-release.md`](docs/ios-app-store-release.md).
+For a simple checklist/template of App Store Connect listing fields, see [`docs/ios-app-store-metadata-template.md`](docs/ios-app-store-metadata-template.md).
+
+To run the future App Store Connect-oriented export flow after you prepare your local export options:
+
+```bash
+./scripts/export_ios_archive.sh
+```
+
+This export path depends on the method configured in `ExportOptions.local.plist` and may contact Apple services.
 
 ### Build and run in Xcode
 
@@ -98,11 +175,20 @@ The generated app bundle is placed in:
 .artifacts/PureText.app
 ```
 
+To validate the shared core package compatibility:
+
+```bash
+./scripts/validate_puretextcore_compatibility.sh
+```
+
+The script always validates `PureTextCore` on macOS and attempts an iOS Simulator validation when the required Xcode platform components are installed locally.
+The repository now includes an initial iOS app scaffold in `Apps/PureTextiOS/`, but iOS distribution still remains outside the current macOS release flow.
+
 ## Release Build
 
 At the moment, release-style packaging is handled by [`scripts/build_app.sh`](scripts/build_app.sh), [`scripts/package_release.sh`](scripts/package_release.sh), and the GitHub Actions workflow [`.github/workflows/release.yml`](.github/workflows/release.yml). The local scripts:
 
-- compiles the Swift sources with `swiftc`
+- compiles the Swift package and its local dependencies with `swift build`
 - generates icon assets from `Assets/PureTextIcon.png`
 - assembles `PureText.app` in `.artifacts/`
 - packages `PureText.app` into a distributable ZIP archive in `.artifacts/release/`
@@ -139,6 +225,8 @@ After the workflow finishes:
 4. Download the ZIP once to confirm the archive expands into `PureText.app`.
 
 If you plan to distribute signed builds outside your machine, you will still need to add your own code signing, notarization, and release automation.
+For the iOS app, the current repository is prepared for local installation first; App Store or TestFlight publication should happen only after you set final local signing values and distribution metadata outside Git-tracked files.
+If you later automate iOS distribution, keep App Store Connect credentials, API keys, provisioning details, and signing values in local machine settings or CI secrets, never in committed files.
 
 ## Initial Configuration
 
@@ -148,6 +236,7 @@ The project currently depends only on:
 
 - Xcode or the Xcode Command Line Tools
 - macOS system frameworks such as `AppKit` and `UniformTypeIdentifiers`
+- the local shared package `Packages/PureTextCore`
 
 ## Usage Examples
 

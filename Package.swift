@@ -13,9 +13,15 @@ let package = Package(
             targets: ["PureText"]
         ),
     ],
+    dependencies: [
+        .package(path: "Packages/PureTextCore"),
+    ],
     targets: [
         .executableTarget(
             name: "PureText",
+            dependencies: [
+                .product(name: "PureTextCore", package: "PureTextCore"),
+            ],
             path: "Sources/PureText"
         ),
     ]

@@ -9,19 +9,25 @@ APP_BUNDLE="$BUILD_ROOT/$APP_NAME.app"
 ASSET_CATALOG="$BUILD_ROOT/Assets.xcassets"
 APPICON_SET="$ASSET_CATALOG/AppIcon.appiconset"
 ICON_SOURCE="$ROOT_DIR/Assets/PureTextIcon.png"
-BIN_PATH="$BUILD_ROOT/$APP_NAME"
+MODULE_CACHE_ROOT="$ROOT_DIR/.cache/org.swift.swiftpm"
+CLANG_CACHE_ROOT="$ROOT_DIR/.cache/clang"
+BUILD_CONFIGURATION="${BUILD_CONFIGURATION:-release}"
 CODESIGN_IDENTITY="${CODESIGN_IDENTITY:--}"
 
 rm -rf \
 	"$APP_BUNDLE" \
 	"$ASSET_CATALOG"
-mkdir -p "$BUILD_ROOT" "$ROOT_DIR/.cache/clang" "$APP_BUNDLE/Contents/MacOS" "$APP_BUNDLE/Contents/Resources" "$APPICON_SET"
+mkdir -p "$BUILD_ROOT" "$CLANG_CACHE_ROOT" "$MODULE_CACHE_ROOT" "$APP_BUNDLE/Contents/MacOS" "$APP_BUNDLE/Contents/Resources" "$APPICON_SET"
 
-CLANG_MODULE_CACHE_PATH="$ROOT_DIR/.cache/clang" \
-swiftc "$ROOT_DIR"/Sources/PureText/*.swift \
-	-framework AppKit \
-	-framework UniformTypeIdentifiers \
-	-o "$BIN_PATH"
+CLANG_MODULE_CACHE_PATH="$CLANG_CACHE_ROOT" \
+SWIFTPM_MODULECACHE_OVERRIDE="$MODULE_CACHE_ROOT" \
+swift build -c "$BUILD_CONFIGURATION" --product "$APP_NAME"
+
+BIN_PATH="$(
+	CLANG_MODULE_CACHE_PATH="$CLANG_CACHE_ROOT" \
+	SWIFTPM_MODULECACHE_OVERRIDE="$MODULE_CACHE_ROOT" \
+	swift build -c "$BUILD_CONFIGURATION" --show-bin-path
+)/$APP_NAME"
 
 create_icon() {
 	local size="$1"

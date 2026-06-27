@@ -1,0 +1,21 @@
+name: Validate Core Compatibility
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  validate-core:
+    runs-on: macos-14
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Validate PureTextCore on macOS and iOS Simulator
+        shell: bash
+        env:
+          STRICT_IOS_VALIDATION: "1"
+        run: ./scripts/validate_puretextcore_compatibility.sh

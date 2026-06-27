@@ -1,4 +1,5 @@
 import AppKit
+import PureTextCore
 
 /// Owns the main application window, custom tab strip, and document lifecycle actions.
 @MainActor

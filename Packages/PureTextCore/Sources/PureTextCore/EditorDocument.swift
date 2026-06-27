@@ -1,26 +1,26 @@
 import Foundation
 
 /// Stores the editable state for a single open file or untitled tab.
-final class EditorDocument {
+public final class EditorDocument: @unchecked Sendable {
     /// Stable identifier used to differentiate open tabs in memory.
-    let id = UUID()
+    public let id = UUID()
     /// The on-disk location of the document when it has been opened or saved.
-    var url: URL?
+    public var url: URL?
     /// The semantic file type used for file dialogs and formatting support.
-    var fileType: NoteFileType
+    public var fileType: NoteFileType
     /// The string encoding used for reading and writing the file contents.
-    var encoding: String.Encoding
+    public var encoding: String.Encoding
     private let untitledDisplayName: String?
 
     /// The editable text currently shown in the editor.
-    private(set) var content: String
+    public private(set) var content: String
     private var savedContent: String
 
     /// Callback invoked when the edited state or file metadata changes.
-    var onStateChange: (() -> Void)?
+    public var onStateChange: (() -> Void)?
 
     /// Creates a document model for a saved file or a new untitled tab.
-    init(
+    public init(
         url: URL? = nil,
         fileType: NoteFileType = .txt,
         content: String = "",
@@ -36,29 +36,44 @@ final class EditorDocument {
     }
 
     /// The name shown in the tab bar and window title.
-    var displayName: String {
+    public var displayName: String {
         url?.lastPathComponent ?? untitledDisplayName ?? "Untitle"
     }
 
     /// The default file name suggested when saving an untitled document.
-    var suggestedFilename: String {
-        url?.lastPathComponent ?? "\(displayName).\(fileType.defaultExtension)"
+    public var suggestedFilename: String {
+        if let savedName = url?.lastPathComponent {
+            return savedName
+        }
+
+        let currentDisplayName = displayName
+        let existingExtension = (currentDisplayName as NSString).pathExtension.lowercased()
+
+        if existingExtension == fileType.defaultExtension.lowercased() {
+            return currentDisplayName
+        }
+
+        if existingExtension.isEmpty {
+            return "\(currentDisplayName).\(fileType.defaultExtension)"
+        }
+
+        return currentDisplayName
     }
 
     /// Indicates whether the in-memory content differs from the last saved content.
-    var isEdited: Bool {
+    public var isEdited: Bool {
         content != savedContent
     }
 
     /// Updates the current content and notifies listeners when the value changes.
-    func updateContent(_ newContent: String) {
+    public func updateContent(_ newContent: String) {
         guard content != newContent else { return }
         content = newContent
         onStateChange?()
     }
 
     /// Marks the document as saved and updates the persisted file metadata.
-    func markSaved(
+    public func markSaved(
         url: URL? = nil,
         fileType: NoteFileType? = nil,
         encoding: String.Encoding? = nil

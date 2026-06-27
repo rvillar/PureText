@@ -1,4 +1,5 @@
 import AppKit
+import PureTextCore
 
 /// Hosts the plain-text editor view for a single open tab.
 final class EditorTabViewController: NSViewController, NSTextViewDelegate {

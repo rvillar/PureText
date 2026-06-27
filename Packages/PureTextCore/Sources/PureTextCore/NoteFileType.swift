@@ -2,7 +2,7 @@ import Foundation
 import UniformTypeIdentifiers
 
 /// Enumerates the file extensions that PureText can open, save, and optionally format.
-enum NoteFileType: String, CaseIterable {
+public enum NoteFileType: String, CaseIterable, Sendable {
     case txt
     case md
     case csv
@@ -15,22 +15,22 @@ enum NoteFileType: String, CaseIterable {
     case html
 
     /// Resolves a file type from a URL extension.
-    static func from(url: URL) -> NoteFileType? {
+    public static func from(url: URL) -> NoteFileType? {
         NoteFileType(rawValue: url.pathExtension.lowercased())
     }
 
     /// A short display label used in errors and diagnostics.
-    var displayName: String {
+    public var displayName: String {
         rawValue.uppercased()
     }
 
     /// The default extension suggested for newly saved files of this type.
-    var defaultExtension: String {
+    public var defaultExtension: String {
         rawValue
     }
 
     /// Indicates whether the editor offers a formatting command for the file type.
-    var isFormattingSupported: Bool {
+    public var isFormattingSupported: Bool {
         switch self {
         case .json, .ljson, .xml, .html, .pom:
             return true
@@ -39,8 +39,8 @@ enum NoteFileType: String, CaseIterable {
         }
     }
 
-    /// The Uniform Type Identifier used by Finder dialogs and document registration.
-    var utType: UTType? {
+    /// The Uniform Type Identifier used by file pickers and document registration.
+    public var utType: UTType? {
         switch self {
         case .txt:
             return .plainText
@@ -65,8 +65,8 @@ enum NoteFileType: String, CaseIterable {
         }
     }
 
-    /// All supported content types exposed to open and save panels.
-    static var supportedContentTypes: [UTType] {
+    /// All supported content types exposed to open and save flows.
+    public static var supportedContentTypes: [UTType] {
         allCases.compactMap(\.utType)
     }
 }

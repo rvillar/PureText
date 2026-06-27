@@ -8,10 +8,24 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 ## [Unreleased]
 
 ### Added
+- Local shared package `Packages/PureTextCore` for document state, file types, and formatting logic intended to stay compatible with macOS and iOS.
+- Initial iOS/iPadOS app scaffold in `Apps/PureTextiOS`, including a SwiftUI shell, `UITextView`-based editor, file import/export flow, and session draft recovery.
+- Core compatibility validation script and GitHub Actions workflow for checking `PureTextCore` on macOS and on iOS-capable environments.
+- iOS App Store preparation guide and a local archive helper script that keep publication credentials outside the repository.
+- Local App Store Connect metadata template for organizing the iOS listing before submission.
+- Local export helper script and example export options template for moving from `.xcarchive` to a local iOS distribution export without committing sensitive settings.
 
 ### Changed
+- The repository now separates macOS app code, shared core code, and the future iOS app structure explicitly.
+- The iOS app currently targets local Xcode installation on a personal device instead of external distribution.
+- The iOS project now reads local signing settings from an ignored `Local.xcconfig`, keeping Apple account-specific values out of GitHub.
+- The iOS documentation now treats direct installation on a personal iPhone as the primary current workflow, while keeping App Store publication as optional future guidance.
 
 ### Fixed
+- iOS document opening now declares supported content types explicitly, preventing `.txt` files from appearing unavailable in the Files picker.
+- iOS saving now preserves the original security-scoped file URL, fixing save failures in iCloud Drive (`com-apple-CloudDocs`).
+- The initial iOS layout was compacted and the app icon catalog was populated so the app installs with a visible icon and a cleaner editor presentation.
+- Recovered iOS drafts now avoid suggesting duplicate filename extensions when the user saves them again.
 
 ### Removed
 

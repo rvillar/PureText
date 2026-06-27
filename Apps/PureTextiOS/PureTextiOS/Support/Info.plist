@@ -3,32 +3,76 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>en</string>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
 	<string>PureText</string>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>Plain Text Document</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>public.plain-text</string>
+				<string>public.comma-separated-values-text</string>
+				<string>net.daringfireball.markdown</string>
+				<string>com.fnt.puretext.yml</string>
+				<string>com.fnt.puretext.bru</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>Structured Text Document</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.fnt.puretext.pom</string>
+				<string>public.json</string>
+				<string>public.xml</string>
+				<string>public.html</string>
+				<string>com.fnt.puretext.ljson</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleExecutable</key>
-	<string>PureText</string>
-	<key>CFBundleIconFile</key>
-	<string>AppIcon</string>
-	<key>CFBundleIconName</key>
-	<string>AppIcon</string>
+	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.fnt.puretext</string>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>PureText</string>
+	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundlePackageType</key>
-	<string>APPL</string>
+	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.3.2</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
-	<string>6</string>
-	<key>LSApplicationCategoryType</key>
-	<string>public.app-category.productivity</string>
-	<key>LSMinimumSystemVersion</key>
-	<string>13.0</string>
-	<key>NSHighResolutionCapable</key>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<true/>
+	<key>UILaunchScreen</key>
+	<dict/>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
@@ -107,41 +151,6 @@
 					<string>pom</string>
 				</array>
 			</dict>
-		</dict>
-	</array>
-	<key>CFBundleDocumentTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Plain Text Document</string>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>LSHandlerRank</key>
-			<string>Owner</string>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>public.plain-text</string>
-				<string>public.comma-separated-values-text</string>
-				<string>net.daringfireball.markdown</string>
-				<string>com.fnt.puretext.yml</string>
-				<string>com.fnt.puretext.bru</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Structured Text Document</string>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>LSHandlerRank</key>
-			<string>Owner</string>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>com.fnt.puretext.pom</string>
-				<string>public.json</string>
-				<string>public.xml</string>
-				<string>public.html</string>
-				<string>com.fnt.puretext.ljson</string>
-			</array>
 		</dict>
 	</array>
 </dict>

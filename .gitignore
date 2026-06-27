@@ -12,6 +12,7 @@ DerivedData/
 
 # Xcode user data
 *.xcuserdata/
+xcuserdata/
 *.xccheckout
 *.xcscmblueprint
 *.moved-aside
@@ -33,3 +34,8 @@ DerivedData/
 *.swo
 TODO_*.md
 
+# Local iOS signing and publishing settings
+Apps/PureTextiOS/Config/Local.xcconfig
+Apps/PureTextiOS/Config/ExportOptions.local.plist
+Apps/PureTextiOS/Config/AuthKey_*.p8
+Apps/PureTextiOS/Config/*.mobileprovision

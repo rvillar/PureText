@@ -1,0 +1,5 @@
+// Copy this file to Local.xcconfig for local signing and publishing settings
+// that should not be committed to GitHub.
+
+PURETEXT_IOS_BUNDLE_IDENTIFIER = com.example.puretext.ios
+PURETEXT_IOS_DEVELOPMENT_TEAM = YOUR_TEAM_ID
