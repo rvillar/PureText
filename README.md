@@ -52,6 +52,7 @@ The project aims to offer a small, focused editor for unformatted text on macOS 
 - Automatic untitled tabs named `Untitle1`, `Untitle2`, and so on
 - Plain-text editing with undo support
 - Native search and replace actions from the Edit menu
+- Native print action for the current tab from the File menu
 - Recent files list in the File menu
 - Selection transforms for uppercase, lowercase, and proper case
 - File-type-aware formatting for JSON, LJSON, XML, HTML, and POM
@@ -211,7 +212,7 @@ Before publishing a new release on GitHub:
 
 To publish a prebuilt app for users without requiring a local build:
 
-1. Push a tag such as `v0.3.2`
+1. Push a tag such as `v0.3.3`
 2. Let GitHub Actions run the `Release App` workflow
 3. Download or share the generated ZIP from the GitHub Release page
 

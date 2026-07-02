@@ -8,12 +8,23 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 ## [Unreleased]
 
 ### Added
+ 
+### Changed
+ 
+### Fixed
+ 
+### Removed
+
+## [0.3.3] - 2026-07-02
+
+### Added
 - Local shared package `Packages/PureTextCore` for document state, file types, and formatting logic intended to stay compatible with macOS and iOS.
 - Initial iOS/iPadOS app scaffold in `Apps/PureTextiOS`, including a SwiftUI shell, `UITextView`-based editor, file import/export flow, and session draft recovery.
 - Core compatibility validation script and GitHub Actions workflow for checking `PureTextCore` on macOS and on iOS-capable environments.
 - iOS App Store preparation guide and a local archive helper script that keep publication credentials outside the repository.
 - Local App Store Connect metadata template for organizing the iOS listing before submission.
 - Local export helper script and example export options template for moving from `.xcarchive` to a local iOS distribution export without committing sensitive settings.
+- Native print action in the macOS File menu for printing the currently selected tab.
 
 ### Changed
 - The repository now separates macOS app code, shared core code, and the future iOS app structure explicitly.

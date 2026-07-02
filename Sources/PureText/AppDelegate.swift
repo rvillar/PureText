@@ -78,6 +78,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         mainWindowController.saveDocumentAsAction(sender)
     }
 
+    @objc private func printDocument(_ sender: Any?) {
+        mainWindowController.printDocumentAction(sender)
+    }
+
     @objc private func closeDocument(_ sender: Any?) {
         mainWindowController.closeDocumentAction(sender)
     }
@@ -128,6 +132,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         submenu.addItem(.separator())
         submenu.addItem(withTitle: L10n.save, action: #selector(saveDocument(_:)), keyEquivalent: "s").target = self
         submenu.addItem(withTitle: L10n.saveAs, action: #selector(saveDocumentAs(_:)), keyEquivalent: "S").target = self
+        submenu.addItem(.separator())
+        submenu.addItem(withTitle: L10n.print, action: #selector(printDocument(_:)), keyEquivalent: "p").target = self
         submenu.addItem(.separator())
         submenu.addItem(withTitle: L10n.formatContent, action: #selector(formatDocument(_:)), keyEquivalent: "F").target = self
         submenu.addItem(.separator())

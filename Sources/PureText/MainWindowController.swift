@@ -104,6 +104,12 @@ final class MainWindowController: NSObject, NSWindowDelegate, NSToolbarDelegate 
         return saveAs(document: tab.document)
     }
 
+    /// Opens the native macOS print flow for the currently selected tab.
+    func printCurrentDocument(_ sender: Any?) {
+        guard let tab = currentTabController else { return }
+        tab.printContent(sender)
+    }
+
     /// Closes the current tab after prompting for unsaved changes if needed.
     func closeCurrentDocument() {
         guard
@@ -169,6 +175,10 @@ final class MainWindowController: NSObject, NSWindowDelegate, NSToolbarDelegate 
 
     @objc func saveDocumentAsAction(_ sender: Any?) {
         _ = saveCurrentDocumentAs()
+    }
+
+    @objc func printDocumentAction(_ sender: Any?) {
+        printCurrentDocument(sender)
     }
 
     @objc func closeDocumentAction(_ sender: Any?) {

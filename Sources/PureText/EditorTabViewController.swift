@@ -94,6 +94,16 @@ final class EditorTabViewController: NSViewController, NSTextViewDelegate {
         )
     }
 
+    /// Opens the native macOS print flow for the current editor content.
+    func printContent(_ sender: Any?) {
+        guard isViewLoaded else { return }
+        focusEditor()
+
+        let operation = NSPrintOperation(view: textView)
+        operation.jobTitle = document.displayName
+        operation.run()
+    }
+
     /// The title rendered in the custom tab strip.
     var tabTitle: String {
         document.displayName + (document.isEdited ? " •" : "")

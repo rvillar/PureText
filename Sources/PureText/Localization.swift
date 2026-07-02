@@ -128,6 +128,11 @@ enum L10n {
         localized(english: "Save As…", portuguese: "Salvar Como…")
     }
 
+    /// Localized string for the Print command.
+    static var print: String {
+        localized(english: "Print…", portuguese: "Imprimir…")
+    }
+
     /// Localized string for the content formatting command.
     static var formatContent: String {
         localized(english: "Format Content", portuguese: "Formatar Conteúdo")
